@@ -1,0 +1,31 @@
+# Dependencies
+**/node_modules/
+BE2/vendor/
+
+# Local env (root .env and .env.example are tracked for API_BASE_URL sync)
+BE2/.env
+BE2/.env.backup
+BE2/.env.production
+qr-scanner/.env
+
+# Laravel / PHP
+BE2/.phpunit.cache
+BE2/.phpunit.result.cache
+BE2/public/build
+BE2/public/hot
+BE2/public/storage
+BE2/storage/*.key
+BE2/bootstrap/cache/*.php
+!BE2/bootstrap/cache/.gitignore
+
+# Expo / React Native
+qr-scanner/.expo/
+qr-scanner/dist/
+qr-scanner/web-build/
+
+# IDE / OS
+.idea/
+.vscode/
+.fleet/
+.DS_Store
+Thumbs.db

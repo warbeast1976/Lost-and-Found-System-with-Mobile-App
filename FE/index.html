@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FindBack — Lost &amp; Found Management</title>
+  <meta name="description" content="Community lost and found platform to report, browse, and claim items."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="assets/css/style.css"/>
+</head>
+<body>
+  <!-- Toast notifications -->
+  <div id="toast-container"></div>
+
+  <!-- Sidebar (authenticated users) -->
+  <aside id="sidebar"></aside>
+
+  <!-- Main app container -->
+  <main id="app"></main>
+
+  <!-- Modal overlay -->
+  <div id="modal-overlay" class="modal-overlay hidden">
+    <div id="modal-box" class="modal-box">
+      <button id="modal-close" class="modal-close">✕</button>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <script src="components/toast.js"></script>
+  <!-- Core -->
+  <script src="core/config.js"></script>
+  <script src="core/api.js"></script>
+  <script src="core/auth.js"></script>
+  <!-- Components -->
+  <script src="components/ui.js"></script>
+  <script src="components/views.js"></script>
+  <!-- Pages -->
+  <script src="page/public/public.js"></script>
+  <script src="page/user/user.js"></script>
+  <script src="page/staff/staff.js"></script>
+  <script src="page/admin/admin.js"></script>
+  <!-- Bootstrap -->
+  <script src="core/router.js"></script>
+  <script src="core/app.js"></script>
+</body>
+</html>
