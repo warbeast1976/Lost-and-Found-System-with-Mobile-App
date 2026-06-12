@@ -109,7 +109,7 @@ async function loadStaffFoundItems() {
         <td>
           <div class="flex gap-8">
             <button class="btn btn-secondary btn-sm" data-edit-fi="${i.id}">Edit</button>
-            <button class="btn btn-warning btn-sm" data-regen-qr="${i.id}">QR</button>
+            <button type="button" class="btn btn-warning btn-sm" data-view-qr="${i.id}">QR</button>
             <button class="btn btn-primary btn-sm" data-match-fi="${i.id}">Matches</button>
             ${i.status==='available'?`<button class="btn btn-danger btn-sm" data-del-fi="${i.id}">Del</button>`:''}
           </div>
@@ -127,18 +127,8 @@ async function loadStaffFoundItems() {
         catch(e) { toast(e.message,'error'); }
       };
     });
-    document.querySelectorAll('[data-regen-qr]').forEach(b => {
-      b.onclick = async () => {
-        try {
-          const r = await API.regenerateQr(b.dataset.regenQr);
-          toast('QR code regenerated!');
-          openModal(`<h2 class="modal-title">QR Code</h2>
-            <div style="text-align:center">
-              <img src="${r.data.qr_code_url}" style="max-width:220px;margin:0 auto"/>
-              <p class="text-sm text-muted mt-8">Reference: <strong>${r.data.reference_code}</strong></p>
-            </div>`);
-        } catch(e) { toast(e.message,'error'); }
-      };
+    document.querySelectorAll('[data-view-qr]').forEach(b => {
+      b.addEventListener('click', (e) => showFoundItemQr(b.dataset.viewQr, e));
     });
 
     document.querySelectorAll('[data-match-fi]').forEach(b => {
@@ -172,6 +162,73 @@ async function loadStaffFoundItems() {
       };
     });
   } catch(e) { el.innerHTML = emptyState('<i data-lucide="x-circle"></i>','Error',e.message); }
+}
+
+async function showFoundItemQr(itemId, event) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  openModal(spinner(), true);
+
+  const renderQrModal = (item) => {
+    const qrUrl = item?.qr_code_url
+      ? `${item.qr_code_url}${item.qr_code_url.includes('?') ? '&' : '?'}t=${Date.now()}`
+      : null;
+
+    openModal(`
+      <h2 class="modal-title"><i data-lucide="qr-code"></i> Found Item QR Code</h2>
+      <div style="text-align:center">
+        ${qrUrl
+          ? `<img src="${qrUrl}" alt="QR code for ${item.reference_code || 'item'}" style="display:block;max-width:240px;width:100%;margin:0 auto;border:1px solid var(--border);border-radius:12px;padding:8px;background:#fff"/>`
+          : emptyState('<i data-lucide="qr-code"></i>', 'No QR code yet', 'Click regenerate to create one for this item.')}
+        <p class="text-sm text-muted mt-12">Reference: <strong>${item.reference_code || '—'}</strong></p>
+        <p class="text-xs text-muted mt-8">Attach this label to the physical item in storage.</p>
+      </div>
+      <div class="flex gap-8 mt-16 justify-center">
+        <button type="button" class="btn btn-secondary btn-sm" id="modal-regen-qr">Regenerate</button>
+        <button type="button" class="btn btn-primary btn-sm" id="modal-close-qr">Close</button>
+      </div>
+    `, true);
+
+    document.getElementById('modal-close-qr')?.addEventListener('click', closeModal);
+    document.getElementById('modal-regen-qr')?.addEventListener('click', async () => {
+      const btn = document.getElementById('modal-regen-qr');
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Regenerating…';
+      }
+      try {
+        const regen = await API.regenerateQr(itemId);
+        toast('QR code regenerated.');
+        renderQrModal(regen.data);
+      } catch (err) {
+        toast(err.message, 'error');
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Regenerate';
+        }
+      }
+    });
+
+    if (window.lucide) lucide.createIcons();
+  };
+
+  try {
+    const res = await API.getFoundItem(itemId);
+    let item = res.data;
+
+    if (!item?.qr_code_url) {
+      const regen = await API.regenerateQr(itemId);
+      item = regen.data;
+    }
+
+    renderQrModal(item);
+  } catch (e) {
+    openModal(emptyState('<i data-lucide="x-circle"></i>', 'Could not load QR code', e.message), true);
+    if (window.lucide) lucide.createIcons();
+  }
 }
 
 function showFoundItemForm(item = null) {

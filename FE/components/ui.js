@@ -11,19 +11,27 @@ function toast(msg, type = 'success') {
 }
 
 /* ---- Modal ---- */
+let modalOpenedAt = 0;
+
 function openModal(html, large = false) {
   const box = document.getElementById('modal-box');
   box.classList.toggle('modal-lg', large);
   document.getElementById('modal-content').innerHTML = html;
   document.getElementById('modal-overlay').classList.remove('hidden');
+  modalOpenedAt = Date.now();
 }
+
 function closeModal() {
   document.getElementById('modal-overlay').classList.add('hidden');
   document.getElementById('modal-content').innerHTML = '';
 }
+
 document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal-box').addEventListener('click', (e) => e.stopPropagation());
 document.getElementById('modal-overlay').addEventListener('click', (e) => {
-  if (e.target === document.getElementById('modal-overlay')) closeModal();
+  if (e.target !== document.getElementById('modal-overlay')) return;
+  if (Date.now() - modalOpenedAt < 300) return;
+  closeModal();
 });
 
 /* ---- Spinner ---- */
