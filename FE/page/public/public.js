@@ -458,10 +458,16 @@ function showClaimForm(item) {
   document.getElementById('cf-img-box').onclick = () => document.getElementById('cf-img').click();
   document.getElementById('cf-img').onchange = (e) => {
     const f = e.target.files[0];
-    if (f) {
-      document.getElementById('cf-img-label').textContent = f.name;
-      document.getElementById('cf-img-box').innerHTML += `<img class="img-preview" src="${URL.createObjectURL(f)}"/>`;
+    if (!f) return;
+    document.getElementById('cf-img-label').textContent = f.name;
+    const box = document.getElementById('cf-img-box');
+    let preview = box.querySelector('.img-preview');
+    if (!preview) {
+      preview = document.createElement('img');
+      preview.className = 'img-preview';
+      box.appendChild(preview);
     }
+    preview.src = URL.createObjectURL(f);
   };
   document.getElementById('claim-form').onsubmit = async (ev) => {
     ev.preventDefault();
