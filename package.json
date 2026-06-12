@@ -1,0 +1,7 @@
+{
+  "name": "lost-and-found",
+  "private": true,
+  "scripts": {
+    "sync-env": "node scripts/sync-env.js"
+  }
+}
