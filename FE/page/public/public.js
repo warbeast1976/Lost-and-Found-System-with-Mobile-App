@@ -164,63 +164,140 @@ Views.login = function() {
   document.getElementById('sidebar').innerHTML = '';
 
   document.getElementById('app').innerHTML = `
-    <div class="auth-layout">
+    <div class="auth-layout auth-layout--split">
       <div class="auth-panel-brand">
-        <div class="auth-brand-logo">
-          <div class="logo-icon"><i data-lucide="search"></i></div>
-          <span>FindBack</span>
-        </div>
-        <h2 class="auth-brand-headline">Welcome back.<br/><span class="gradient-text">You've been missed.</span></h2>
-        <p class="auth-brand-sub">Sign in to manage your reports, track claim requests, and stay on top of your lost &amp; found activity.</p>
-        <div class="auth-brand-features">
-          <div class="auth-brand-feat"><span class="auth-brand-feat-icon"><i data-lucide="check"></i></span> Real-time claim status tracking</div>
-          <div class="auth-brand-feat"><span class="auth-brand-feat-icon"><i data-lucide="check"></i></span> QR code item identification</div>
-          <div class="auth-brand-feat"><span class="auth-brand-feat-icon"><i data-lucide="check"></i></span> Role-based secure access</div>
+        <div class="auth-brand-bg"></div>
+        <div class="auth-brand-content">
+          <div class="auth-brand-logo">
+            <div class="logo-icon"><i data-lucide="search"></i></div>
+            <span>FindBack</span>
+          </div>
+          <h2 class="auth-brand-headline">Welcome back.<br/><span class="gradient-text-light">You've been missed.</span></h2>
+          <p class="auth-brand-sub">Sign in to manage your reports, track claim requests, and stay on top of your lost &amp; found activity.</p>
+          <div class="auth-brand-features">
+            <div class="auth-brand-feat">
+              <span class="auth-brand-feat-icon"><i data-lucide="activity"></i></span>
+              <div>
+                <strong>Live claim tracking</strong>
+                <span>Follow every step from submission to release</span>
+              </div>
+            </div>
+            <div class="auth-brand-feat">
+              <span class="auth-brand-feat-icon"><i data-lucide="qr-code"></i></span>
+              <div>
+                <strong>QR identification</strong>
+                <span>Instantly verify found items with a scan</span>
+              </div>
+            </div>
+            <div class="auth-brand-feat">
+              <span class="auth-brand-feat-icon"><i data-lucide="shield-check"></i></span>
+              <div>
+                <strong>Secure access</strong>
+                <span>Role-based permissions for every user type</span>
+              </div>
+            </div>
+          </div>
+          <div class="auth-brand-stats">
+            <div class="auth-brand-stat">
+              <span class="auth-brand-stat-val">QR</span>
+              <span class="auth-brand-stat-lbl">Smart Tracking</span>
+            </div>
+            <div class="auth-brand-stat-divider"></div>
+            <div class="auth-brand-stat">
+              <span class="auth-brand-stat-val">3</span>
+              <span class="auth-brand-stat-lbl">User Roles</span>
+            </div>
+            <div class="auth-brand-stat-divider"></div>
+            <div class="auth-brand-stat">
+              <span class="auth-brand-stat-val">24/7</span>
+              <span class="auth-brand-stat-lbl">Access</span>
+            </div>
+          </div>
         </div>
       </div>
       <div class="auth-panel-form">
-        <div class="auth-card">
-          <h2 class="auth-card-title">Sign in</h2>
-          <p class="auth-card-sub">Enter your credentials to access your account</p>
-          <form id="login-form">
-            <div class="form-group">
-              <label class="form-label">Email Address</label>
-              <input id="l-email" type="email" class="form-control" placeholder="you@example.com" required/>
+        <div class="auth-form-wrap animate-fade-in">
+          <button type="button" class="auth-back-link" id="go-home">
+            <i data-lucide="arrow-left"></i> Back to home
+          </button>
+          <div class="auth-card">
+            <div class="auth-card-header">
+              <div class="auth-card-icon"><i data-lucide="log-in"></i></div>
+              <div>
+                <h2 class="auth-card-title">Sign in</h2>
+                <p class="auth-card-sub">Enter your credentials to continue</p>
+              </div>
             </div>
-            <div class="form-group">
-              <label class="form-label">Password</label>
-              <input id="l-pass" type="password" class="form-control" placeholder="••••••••" required/>
+            <form id="login-form">
+              <div class="form-group">
+                <label class="form-label" for="l-email">Email address</label>
+                <div class="input-icon-wrap">
+                  <span class="input-icon"><i data-lucide="mail"></i></span>
+                  <input id="l-email" type="email" class="form-control input-with-icon" placeholder="you@example.com" autocomplete="email" required/>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="l-pass">Password</label>
+                <div class="input-icon-wrap">
+                  <span class="input-icon"><i data-lucide="lock"></i></span>
+                  <input id="l-pass" type="password" class="form-control input-with-icon" placeholder="Enter your password" autocomplete="current-password" required/>
+                  <button type="button" class="input-toggle-pass" id="l-toggle-pass" aria-label="Show password">
+                    <i data-lucide="eye"></i>
+                  </button>
+                </div>
+              </div>
+              <div id="l-err" class="auth-alert hidden" role="alert"></div>
+              <button class="btn btn-primary btn-block btn-lg auth-submit" type="submit" id="l-btn">
+                <span class="auth-submit-text">Sign in</span>
+                <i data-lucide="arrow-right" class="auth-submit-icon"></i>
+              </button>
+            </form>
+            <div class="auth-divider"><span>or</span></div>
+            <button type="button" class="btn btn-outline btn-block" id="go-browse">
+              <i data-lucide="compass"></i> Browse items without signing in
+            </button>
+            <div class="auth-footer">
+              Don't have an account? <a href="#" id="go-register">Create one free</a>
             </div>
-            <div id="l-err" class="form-error mb-16"></div>
-            <button class="btn btn-primary btn-block btn-lg" type="submit" id="l-btn">Sign In</button>
-          </form>
-          <div class="auth-footer">
-            Don't have an account? <a href="#" id="go-register">Create one</a>
-          </div>
-          <div class="auth-footer" style="margin-top:8px">
-            <a href="#" id="go-browse" style="color:var(--text-muted)">Browse without signing in →</a>
           </div>
         </div>
       </div>
     </div>`;
 
+  document.getElementById('go-home').onclick     = () => Router.go('home');
   document.getElementById('go-register').onclick = (e) => { e.preventDefault(); Router.go('register'); };
-  document.getElementById('go-browse').onclick   = (e) => { e.preventDefault(); Router.go('browse-found'); };
+  document.getElementById('go-browse').onclick   = () => Router.go('browse-found');
+
+  const passInput = document.getElementById('l-pass');
+  const toggleBtn = document.getElementById('l-toggle-pass');
+  toggleBtn.onclick = () => {
+    const show = passInput.type === 'password';
+    passInput.type = show ? 'text' : 'password';
+    toggleBtn.innerHTML = show ? '<i data-lucide="eye-off"></i>' : '<i data-lucide="eye"></i>';
+    toggleBtn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+    if (window.lucide) lucide.createIcons();
+  };
+
   document.getElementById('login-form').onsubmit = async (e) => {
     e.preventDefault();
     const btn = document.getElementById('l-btn');
     const errEl = document.getElementById('l-err');
-    btn.disabled = true; btn.textContent = 'Signing in…';
+    const submitText = btn.querySelector('.auth-submit-text');
+    btn.disabled = true;
+    submitText.textContent = 'Signing in…';
     errEl.textContent = '';
+    errEl.classList.add('hidden');
     try {
-      const res = await API.login({ email: document.getElementById('l-email').value, password: document.getElementById('l-pass').value });
+      const res = await API.login({ email: document.getElementById('l-email').value, password: passInput.value });
       Auth.setSession(res.data.token, res.data.user);
       renderNavbar();
       Router.goHome();
       toast(`Welcome back, ${res.data.user.name}!`);
     } catch(err) {
       errEl.textContent = err.message;
-      btn.disabled = false; btn.textContent = 'Sign In';
+      errEl.classList.remove('hidden');
+      btn.disabled = false;
+      submitText.textContent = 'Sign in';
     }
   };
 };
