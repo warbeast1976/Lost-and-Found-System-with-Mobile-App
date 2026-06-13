@@ -1011,3 +1011,104 @@ tbody tr:hover { background: var(--surface-2); }
     flex: 1; border-left: none; border-top: 1px solid var(--border); padding: 24px 16px 40px;
   }
 }
+
+/* ============================================================
+   SWEETALERT2 — Custom Theme (matches FindBack design system)
+   ============================================================ */
+
+.swal2-popup {
+  font-family: var(--font) !important;
+  border-radius: var(--radius) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: var(--shadow-lg), 0 20px 40px -8px rgba(0,0,0,0.12) !important;
+  background: var(--surface-1) !important;
+  padding: 2rem 2rem 1.75rem !important;
+}
+
+.swal2-title {
+  color: var(--text) !important;
+  font-size: 1.1rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+  padding: 0 0 0.25rem !important;
+}
+
+.swal2-html-container {
+  color: var(--text-muted) !important;
+  font-size: 0.875rem !important;
+  line-height: 1.5 !important;
+  margin: 0.5rem 0 0 !important;
+}
+
+/* Icon tweaks */
+.swal2-icon {
+  border-width: 2px !important;
+  width: 52px !important;
+  height: 52px !important;
+  margin: 0 auto 1rem !important;
+}
+.swal2-icon .swal2-icon-content {
+  font-size: 1.75rem !important;
+}
+
+/* Buttons container */
+.swal2-actions {
+  margin-top: 1.5rem !important;
+  gap: 8px !important;
+}
+
+/* Confirm button — matches .btn.btn-danger */
+.swal2-confirm {
+  font-family: var(--font) !important;
+  font-size: 0.8125rem !important;
+  font-weight: 600 !important;
+  padding: 0.45rem 1rem !important;
+  border-radius: var(--radius-sm) !important;
+  background: var(--danger) !important;
+  color: #fff !important;
+  border: none !important;
+  box-shadow: none !important;
+  transition: background .15s ease, transform .1s ease !important;
+  letter-spacing: 0.01em !important;
+}
+.swal2-confirm:hover {
+  background: #dc2626 !important;
+  transform: translateY(-1px) !important;
+}
+.swal2-confirm:focus {
+  box-shadow: 0 0 0 3px rgba(239,68,68,0.25) !important;
+}
+
+/* Cancel button — matches .btn.btn-secondary */
+.swal2-cancel {
+  font-family: var(--font) !important;
+  font-size: 0.8125rem !important;
+  font-weight: 600 !important;
+  padding: 0.45rem 1rem !important;
+  border-radius: var(--radius-sm) !important;
+  background: var(--surface-2) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: none !important;
+  transition: background .15s ease !important;
+  letter-spacing: 0.01em !important;
+}
+.swal2-cancel:hover {
+  background: var(--surface-3) !important;
+}
+.swal2-cancel:focus {
+  box-shadow: 0 0 0 3px rgba(0,0,0,0.08) !important;
+}
+
+/* Backdrop */
+.swal2-backdrop-show {
+  background: rgba(0,0,0,0.35) !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+/* Question icon overrides */
+.swal2-icon.swal2-question {
+  border-color: var(--accent) !important;
+  color: var(--accent) !important;
+}
+

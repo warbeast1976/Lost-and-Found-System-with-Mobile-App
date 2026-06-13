@@ -143,7 +143,15 @@ async function loadUserLostItems() {
     });
     document.querySelectorAll('[data-del-lost]').forEach(b => {
       b.onclick = async () => {
-        if (!confirm('Delete this report?')) return;
+        const result = await Swal.fire({
+          title: 'Delete Report?',
+          text: 'This lost item report will be permanently deleted.',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Yes, Delete it',
+          cancelButtonText: 'Cancel',
+        });
+        if (!result.isConfirmed) return;
         try { await API.deleteLostItem(b.dataset.delLost); toast('Report deleted.'); loadUserLostItems(); }
         catch(e) { toast(e.message,'error'); }
       };
@@ -325,7 +333,15 @@ async function loadUserClaims() {
 
     document.querySelectorAll('[data-del-claim]').forEach(b => {
       b.onclick = async () => {
-        if (!confirm('Cancel this claim?')) return;
+        const result = await Swal.fire({
+          title: 'Cancel Claim?',
+          text: 'Your claim request will be permanently cancelled.',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Yes, Cancel Claim',
+          cancelButtonText: 'Keep Claim',
+        });
+        if (!result.isConfirmed) return;
         try { await API.deleteClaimRequest(b.dataset.delClaim); toast('Claim cancelled.'); loadUserClaims(); }
         catch(e) { toast(e.message,'error'); }
       };

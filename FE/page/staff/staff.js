@@ -123,7 +123,15 @@ async function loadStaffFoundItems() {
     });
     document.querySelectorAll('[data-del-fi]').forEach(b => {
       b.onclick = async () => {
-        if (!confirm('Delete this found item?')) return;
+        const result = await Swal.fire({
+          title: 'Delete Found Item?',
+          text: 'This item and all associated data will be permanently removed.',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Yes, Delete it',
+          cancelButtonText: 'Cancel',
+        });
+        if (!result.isConfirmed) return;
         try { await API.deleteFoundItem(b.dataset.delFi); toast('Item deleted.'); loadStaffFoundItems(); }
         catch(e) { toast(e.message,'error'); }
       };
@@ -431,7 +439,15 @@ function showClaimDetail(claim, role) {
   });
 
   document.getElementById('reissue-code')?.addEventListener('click', async () => {
-    if (!confirm('Re-issue pickup code? The old code will be replaced.')) return;
+    const result = await Swal.fire({
+      title: 'Re-issue Pickup Code?',
+      text: 'The old pickup code will be invalidated and replaced with a new one.',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Re-issue',
+      cancelButtonText: 'Cancel',
+    });
+    if (!result.isConfirmed) return;
     try {
       const res = await API.reissuePickupCode(claim.id);
       toast('Pickup code re-issued.');

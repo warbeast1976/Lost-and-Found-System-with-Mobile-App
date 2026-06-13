@@ -136,7 +136,15 @@ async function loadAdminFoundItems() {
 
     document.querySelectorAll('[data-archive]').forEach(b => {
       b.onclick = async () => {
-        if (!confirm('Archive this item?')) return;
+        const result = await Swal.fire({
+          title: 'Archive this item?',
+          text: 'The item will be marked as archived and removed from active listings.',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Yes, Archive it',
+          cancelButtonText: 'Cancel',
+        });
+        if (!result.isConfirmed) return;
         try { await API.archiveFoundItem(b.dataset.archive); toast('Item archived.'); loadAdminFoundItems(); }
         catch(e) { toast(e.message,'error'); }
       };
@@ -361,7 +369,15 @@ async function loadCategories() {
     });
     document.querySelectorAll('[data-del-cat]').forEach(b => {
       b.onclick = async () => {
-        if (!confirm('Delete this category?')) return;
+        const result = await Swal.fire({
+          title: 'Delete Category?',
+          text: 'This will permanently delete this category. Items using it may be affected.',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Yes, Delete it',
+          cancelButtonText: 'Cancel',
+        });
+        if (!result.isConfirmed) return;
         try { await API.deleteCategory(b.dataset.delCat); toast('Category deleted.'); loadCategories(); }
         catch(e) { toast(e.message,'error'); }
       };
@@ -453,7 +469,15 @@ async function loadAdminUsers() {
     });
     document.querySelectorAll('[data-del-user]').forEach(b => {
       b.onclick = async () => {
-        if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) return;
+        const result = await Swal.fire({
+          title: 'Delete User?',
+          text: 'This action cannot be undone. All data associated with this user may be lost.',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Yes, Delete User',
+          cancelButtonText: 'Cancel',
+        });
+        if (!result.isConfirmed) return;
         try {
           await API.adminDeleteUser(b.dataset.delUser);
           toast('User deleted successfully.');
