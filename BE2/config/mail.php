@@ -39,11 +39,25 @@ return [
         'smtp' => [
             'transport' => 'smtp',
             'url' => env('MAIL_URL'),
+            'scheme' => env('MAIL_SCHEME'),
             'host' => env('MAIL_HOST', '127.0.0.1'),
             'port' => env('MAIL_PORT', 2525),
             'encryption' => env('MAIL_ENCRYPTION', 'tls'),
             'username' => env('MAIL_USERNAME'),
             'password' => env('MAIL_PASSWORD'),
+            'timeout' => null,
+            'local_domain' => env('MAIL_EHLO_DOMAIN'),
+        ],
+
+        'smtp_backup' => [
+            'transport' => 'smtp',
+            'url' => env('MAIL_URL'),
+            'scheme' => env('MAIL_BACKUP_SCHEME'),
+            'host' => env('MAIL_BACKUP_HOST', '127.0.0.1'),
+            'port' => env('MAIL_BACKUP_PORT', 2525),
+            'encryption' => env('MAIL_BACKUP_ENCRYPTION', 'tls'),
+            'username' => env('MAIL_BACKUP_USERNAME'),
+            'password' => env('MAIL_BACKUP_PASSWORD'),
             'timeout' => null,
             'local_domain' => env('MAIL_EHLO_DOMAIN'),
         ],
@@ -76,10 +90,7 @@ return [
 
         'failover' => [
             'transport' => 'failover',
-            'mailers' => [
-                'smtp',
-                'log',
-            ],
+            'mailers' => explode(',', env('MAIL_FAILOVER_MAILERS', 'smtp,log')),
         ],
 
     ],
