@@ -206,6 +206,9 @@ input,textarea,select{font-family:var(--font); outline: none;}
 .btn-danger { background: var(--danger); color: #fff; box-shadow: var(--shadow-sm); }
 .btn-danger:hover { background: #dc2626; }
 
+.btn-print { background: var(--accent-light); color: var(--accent); border: 1px solid #bfdbfe; box-shadow: none; }
+.btn-print:hover { background: #dbeafe; color: #1d4ed8; border-color: #93c5fd; }
+
 .btn-sm { padding: 6px 12px; font-size: .8rem; }
 .btn-lg { padding: 10px 20px; font-size: .95rem; border-radius: var(--radius); }
 .btn-xl { padding: 12px 24px; font-size: 1rem; border-radius: var(--radius); }

@@ -124,7 +124,7 @@ async function loadUserLostItems() {
         <td>
           <div class="flex gap-8">
             <button class="btn btn-secondary btn-sm" data-edit-lost="${i.id}">Edit</button>
-            <button class="btn btn-secondary btn-sm" data-print-lost="${i.id}">Print</button>
+            <button class="btn btn-print btn-sm" data-print-lost="${i.id}"><i data-lucide="printer"></i> Print</button>
             <button class="btn btn-primary btn-sm" data-match-lost="${i.id}">Matches</button>
             ${i.status==='pending'?`<button class="btn btn-danger btn-sm" data-del-lost="${i.id}">Delete</button>`:''}
           </div>
@@ -319,7 +319,7 @@ async function loadUserClaims() {
           </div>` : ''}
         ${['approved','released'].includes(c.status) ? `
           <div class="flex gap-8 mt-16">
-            <button class="btn btn-secondary btn-sm" data-print-claim="${c.id}"><i data-lucide="printer"></i> Print Receipt</button>
+            <button class="btn btn-print btn-sm" data-print-claim="${c.id}"><i data-lucide="printer"></i> Print Receipt</button>
           </div>` : ''}
       </div>`).join('')}</div>`;
 

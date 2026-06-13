@@ -12,7 +12,7 @@ Views.adminDashboard = async function() {
           <button class="btn btn-secondary btn-sm" id="exp-found">⬇ Found CSV</button>
           <button class="btn btn-secondary btn-sm" id="exp-lost">⬇ Lost CSV</button>
           <button class="btn btn-secondary btn-sm" id="exp-claims">⬇ Claims CSV</button>
-          <button class="btn btn-secondary btn-sm" id="print-claims-summary"><i data-lucide="printer"></i> Print Claims</button>
+          <button class="btn btn-print btn-sm" id="print-claims-summary"><i data-lucide="printer"></i> Print Report</button>
         </div>
       </div>
       <div id="admin-stats">${spinner()}</div>
@@ -126,7 +126,7 @@ async function loadAdminFoundItems() {
         <td>
           <div class="flex gap-8">
             <button class="btn btn-primary btn-sm" data-match-fi="${i.id}">Matches</button>
-            <button class="btn btn-secondary btn-sm" data-print-fi="${i.id}">Print</button>
+            <button class="btn btn-print btn-sm" data-print-fi="${i.id}"><i data-lucide="printer"></i> Print</button>
             ${['available','under_review'].includes(i.status)?
               `<button class="btn btn-danger btn-sm" data-archive="${i.id}">Archive</button>`:'<span class="text-muted text-xs">—</span>'}
           </div>
@@ -208,7 +208,7 @@ Views.adminLostItems = function() {
           <td class="text-muted">${i.last_seen_location||'—'}</td>
           <td class="text-muted">${fmtDate(i.date_lost)}</td>
           <td>${badge(i.status)}</td>
-          <td><button class="btn btn-secondary btn-sm" data-print-lost="${i.id}">Print</button></td>
+          <td><button class="btn btn-print btn-sm" data-print-lost="${i.id}"><i data-lucide="printer"></i> Print</button></td>
         </tr>`).join('')}
         </tbody></table></div>`;
 
