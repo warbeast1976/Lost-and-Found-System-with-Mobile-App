@@ -124,6 +124,7 @@ async function loadUserLostItems() {
         <td>
           <div class="flex gap-8">
             <button class="btn btn-secondary btn-sm" data-edit-lost="${i.id}">Edit</button>
+            <button class="btn btn-secondary btn-sm" data-print-lost="${i.id}">Print</button>
             <button class="btn btn-primary btn-sm" data-match-lost="${i.id}">Matches</button>
             ${i.status==='pending'?`<button class="btn btn-danger btn-sm" data-del-lost="${i.id}">Delete</button>`:''}
           </div>
@@ -136,6 +137,9 @@ async function loadUserLostItems() {
         const res2 = await API.getLostItem(b.dataset.editLost);
         showLostItemForm(res2.data);
       };
+    });
+    document.querySelectorAll('[data-print-lost]').forEach(b => {
+      b.onclick = () => API.printLostItemReport(b.dataset.printLost);
     });
     document.querySelectorAll('[data-del-lost]').forEach(b => {
       b.onclick = async () => {
@@ -313,6 +317,10 @@ async function loadUserClaims() {
             <button class="btn btn-secondary btn-sm" data-edit-claim="${c.id}" data-item="${c.found_item?.item_name}">Edit</button>
             <button class="btn btn-danger btn-sm" data-del-claim="${c.id}">Cancel</button>
           </div>` : ''}
+        ${['approved','released'].includes(c.status) ? `
+          <div class="flex gap-8 mt-16">
+            <button class="btn btn-secondary btn-sm" data-print-claim="${c.id}"><i data-lucide="printer"></i> Print Receipt</button>
+          </div>` : ''}
       </div>`).join('')}</div>`;
 
     document.querySelectorAll('[data-del-claim]').forEach(b => {
@@ -321,6 +329,9 @@ async function loadUserClaims() {
         try { await API.deleteClaimRequest(b.dataset.delClaim); toast('Claim cancelled.'); loadUserClaims(); }
         catch(e) { toast(e.message,'error'); }
       };
+    });
+    document.querySelectorAll('[data-print-claim]').forEach(b => {
+      b.onclick = () => API.printClaimReceipt(b.dataset.printClaim);
     });
     document.querySelectorAll('[data-edit-claim]').forEach(b => {
       b.onclick = async () => {

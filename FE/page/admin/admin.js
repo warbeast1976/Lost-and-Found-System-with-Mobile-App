@@ -12,6 +12,7 @@ Views.adminDashboard = async function() {
           <button class="btn btn-secondary btn-sm" id="exp-found">⬇ Found CSV</button>
           <button class="btn btn-secondary btn-sm" id="exp-lost">⬇ Lost CSV</button>
           <button class="btn btn-secondary btn-sm" id="exp-claims">⬇ Claims CSV</button>
+          <button class="btn btn-secondary btn-sm" id="print-claims-summary"><i data-lucide="printer"></i> Print Claims</button>
         </div>
       </div>
       <div id="admin-stats">${spinner()}</div>
@@ -24,6 +25,7 @@ Views.adminDashboard = async function() {
   document.getElementById('exp-found').onclick = () => { API.exportFoundItems(); toast('Export started.'); };
   document.getElementById('exp-lost').onclick = () => { API.exportLostItems(); toast('Export started.'); };
   document.getElementById('exp-claims').onclick = () => { API.exportClaimRequests(); toast('Export started.'); };
+  document.getElementById('print-claims-summary').onclick = () => API.printClaimsSummary();
 
   try {
     const [foundRes, lostRes, claimRes] = await Promise.all([
@@ -124,6 +126,7 @@ async function loadAdminFoundItems() {
         <td>
           <div class="flex gap-8">
             <button class="btn btn-primary btn-sm" data-match-fi="${i.id}">Matches</button>
+            <button class="btn btn-secondary btn-sm" data-print-fi="${i.id}">Print</button>
             ${['available','under_review'].includes(i.status)?
               `<button class="btn btn-danger btn-sm" data-archive="${i.id}">Archive</button>`:'<span class="text-muted text-xs">—</span>'}
           </div>
@@ -137,6 +140,9 @@ async function loadAdminFoundItems() {
         try { await API.archiveFoundItem(b.dataset.archive); toast('Item archived.'); loadAdminFoundItems(); }
         catch(e) { toast(e.message,'error'); }
       };
+    });
+    document.querySelectorAll('[data-print-fi]').forEach(b => {
+      b.onclick = () => API.printFoundItemSlip(b.dataset.printFi);
     });
 
     document.querySelectorAll('[data-match-fi]').forEach(b => {
@@ -194,7 +200,7 @@ Views.adminLostItems = function() {
       const items = res.data||[];
       if (!items.length) { el.innerHTML = emptyState('<i data-lucide="search"></i>','No lost reports',''); return; }
       el.innerHTML = `<div class="table-wrapper"><table>
-        <thead><tr><th>Item</th><th>Reporter</th><th>Category</th><th>Location</th><th>Date Lost</th><th>Status</th></tr></thead>
+        <thead><tr><th>Item</th><th>Reporter</th><th>Category</th><th>Location</th><th>Date Lost</th><th>Status</th><th>Actions</th></tr></thead>
         <tbody>${items.map(i=>`<tr>
           <td class="fw-600">${i.item_name}<div class="text-xs text-muted">${i.color||''}</div></td>
           <td>${i.user?.name||'—'}<div class="text-xs text-muted">${i.user?.email||''}</div></td>
@@ -202,8 +208,13 @@ Views.adminLostItems = function() {
           <td class="text-muted">${i.last_seen_location||'—'}</td>
           <td class="text-muted">${fmtDate(i.date_lost)}</td>
           <td>${badge(i.status)}</td>
+          <td><button class="btn btn-secondary btn-sm" data-print-lost="${i.id}">Print</button></td>
         </tr>`).join('')}
         </tbody></table></div>`;
+
+      document.querySelectorAll('[data-print-lost]').forEach(b => {
+        b.onclick = () => API.printLostItemReport(b.dataset.printLost);
+      });
     } catch(e) { el.innerHTML = emptyState('<i data-lucide="x-circle"></i>','Error',e.message); }
   })();
 };

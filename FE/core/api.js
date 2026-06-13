@@ -105,6 +105,12 @@ const API = {
   exportLostItems: () => openExport('/exports/lost-items'),
   exportFoundItems: () => openExport('/exports/found-items'),
   exportClaimRequests: () => openExport('/exports/claim-requests'),
+
+  /* Print */
+  printFoundItemSlip: (id) => openPrint(`/print/found-items/${id}`),
+  printClaimReceipt: (id) => openPrint(`/print/claims/${id}`),
+  printLostItemReport: (id) => openPrint(`/print/lost-items/${id}`),
+  printClaimsSummary: () => openPrint('/print/reports/claims'),
 };
 
 function openExport(path) {
@@ -116,4 +122,19 @@ function openExport(path) {
     return;
   }
   window.open(`${BASE}${path}?token=${encodeURIComponent(token)}`, '_blank');
+}
+
+function resolveServerBase() {
+  return resolveApiBase().replace(/\/api$/, '');
+}
+
+function openPrint(path) {
+  const token = getToken();
+  if (!token) {
+    const msg = 'Please sign in to print.';
+    if (window.Toast) Toast.error(msg);
+    else if (window.toast) toast(msg, 'error');
+    return;
+  }
+  window.open(`${resolveServerBase()}${path}?token=${encodeURIComponent(token)}`, '_blank');
 }

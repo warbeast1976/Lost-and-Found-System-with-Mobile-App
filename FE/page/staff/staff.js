@@ -110,6 +110,7 @@ async function loadStaffFoundItems() {
           <div class="flex gap-8">
             <button class="btn btn-secondary btn-sm" data-edit-fi="${i.id}">Edit</button>
             <button type="button" class="btn btn-warning btn-sm" data-view-qr="${i.id}">QR</button>
+            <button type="button" class="btn btn-secondary btn-sm" data-print-fi="${i.id}">Print</button>
             <button class="btn btn-primary btn-sm" data-match-fi="${i.id}">Matches</button>
             ${i.status==='available'?`<button class="btn btn-danger btn-sm" data-del-fi="${i.id}">Del</button>`:''}
           </div>
@@ -129,6 +130,9 @@ async function loadStaffFoundItems() {
     });
     document.querySelectorAll('[data-view-qr]').forEach(b => {
       b.addEventListener('click', (e) => showFoundItemQr(b.dataset.viewQr, e));
+    });
+    document.querySelectorAll('[data-print-fi]').forEach(b => {
+      b.addEventListener('click', () => API.printFoundItemSlip(b.dataset.printFi));
     });
 
     document.querySelectorAll('[data-match-fi]').forEach(b => {
@@ -187,12 +191,14 @@ async function showFoundItemQr(itemId, event) {
         <p class="text-xs text-muted mt-8">Attach this label to the physical item in storage.</p>
       </div>
       <div class="flex gap-8 mt-16 justify-center">
+        <button type="button" class="btn btn-secondary btn-sm" id="modal-print-slip"><i data-lucide="printer"></i> Print Slip</button>
         <button type="button" class="btn btn-secondary btn-sm" id="modal-regen-qr">Regenerate</button>
         <button type="button" class="btn btn-primary btn-sm" id="modal-close-qr">Close</button>
       </div>
     `, true);
 
     document.getElementById('modal-close-qr')?.addEventListener('click', closeModal);
+    document.getElementById('modal-print-slip')?.addEventListener('click', () => API.printFoundItemSlip(itemId));
     document.getElementById('modal-regen-qr')?.addEventListener('click', async () => {
       const btn = document.getElementById('modal-regen-qr');
       if (btn) {
@@ -372,6 +378,9 @@ function showClaimDetail(claim, role) {
         <button class="btn btn-secondary" id="reissue-code"><i data-lucide="refresh-cw"></i> Re-issue Code</button>
         <button class="btn btn-primary" style="flex:1" id="do-release"><i data-lucide="package"></i> Verify &amp; Release</button>
       </div>`:''}
+    <div class="flex justify-end mt-16">
+      <button class="btn btn-secondary btn-sm" id="print-claim-receipt"><i data-lucide="printer"></i> Print Receipt</button>
+    </div>
   `, true);
 
   async function loadActivity() {
@@ -403,6 +412,7 @@ function showClaimDetail(claim, role) {
   }
 
   document.getElementById('refresh-activity')?.addEventListener('click', loadActivity);
+  document.getElementById('print-claim-receipt')?.addEventListener('click', () => API.printClaimReceipt(claim.id));
   loadActivity();
 
   document.getElementById('save-notes')?.addEventListener('click', async () => {
