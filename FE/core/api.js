@@ -51,6 +51,8 @@ const API = {
   getUsers: () => GET('/users'),
   adminCreateStaff: (d) => POST('/users/create-staff', d),
   adminCreateUser: (d) => POST('/users/create-user', d),
+  adminUpdateUser: (id, d) => request('POST', `/users/${id}?_method=PUT`, d),
+  adminDeleteUser: (id) => DEL(`/users/${id}`),
   getScan: (code) => GET(`/scan/${code}`),
   getActivityLogs: (q) => GET('/activity-logs' + (q ? '?' + q : '')),
 

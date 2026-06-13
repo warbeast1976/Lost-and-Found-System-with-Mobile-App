@@ -170,4 +170,52 @@ class AuthController extends Controller
 
         return $this->successResponse('Logged out successfully.');
     }
+
+    public function updateUser(Request $request, User $user)
+    {
+        $validated = $request->validate([
+            'name' => ['sometimes', 'string', 'max:255'],
+            'email' => [
+                'sometimes',
+                'string',
+                'email',
+                'max:255',
+                'unique:users,email,' . $user->id,
+                'regex:/^[\w\.-]+@mlgcl\.edu\.ph$/i'
+            ],
+            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+            'role' => ['sometimes', 'string', 'in:admin,staff,user'],
+        ], [
+            'email.regex' => 'Email must be a valid @mlgcl.edu.ph address.',
+        ]);
+
+        if (isset($validated['name'])) {
+            $user->name = $validated['name'];
+        }
+
+        if (isset($validated['email'])) {
+            $user->email = $validated['email'];
+        }
+
+        if (isset($validated['role'])) {
+            $user->role = $validated['role'];
+        }
+
+        if (!empty($validated['password'])) {
+            $user->password = $validated['password'];
+        }
+
+        $user->save();
+
+        return $this->successResponse('User updated successfully.', new UserResource($user));
+    }
+
+    public function deleteUser(User $user)
+    {
+        // Delete associated records if needed, or rely on cascade/soft deletes
+        // For now, doing a standard hard delete.
+        $user->delete();
+
+        return $this->successResponse('User deleted successfully.');
+    }
 }

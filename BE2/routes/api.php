@@ -56,6 +56,8 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('users', [AuthController::class , 'index']);
             Route::post('users/create-staff', [AuthController::class , 'createStaff']);
             Route::post('users/create-user', [AuthController::class , 'createUser']);
+            Route::put('users/{user}', [AuthController::class , 'updateUser']);
+            Route::delete('users/{user}', [AuthController::class , 'deleteUser']);
         }
         );
 

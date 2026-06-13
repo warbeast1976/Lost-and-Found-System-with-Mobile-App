@@ -433,15 +433,93 @@ async function loadAdminUsers() {
     const users = res.data||[];
     if (!users.length) { el.innerHTML = emptyState('<i data-lucide="users"></i>','No users found',''); return; }
     el.innerHTML = `<div class="table-wrapper"><table>
-      <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Joined</th></tr></thead>
+      <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Joined</th><th>Actions</th></tr></thead>
       <tbody>${users.map(u=>`<tr>
         <td class="fw-600">${u.name}</td>
         <td class="text-muted">${u.email}</td>
         <td><span class="role-badge ${u.role}">${u.role}</span></td>
         <td class="text-muted">${fmtDate(u.created_at)}</td>
+        <td>
+          <div class="flex gap-8">
+            <button class="btn btn-secondary btn-sm" data-edit-user='${JSON.stringify(u).replace(/'/g, "&apos;")}'>Edit</button>
+            <button class="btn btn-danger btn-sm" data-del-user="${u.id}">Delete</button>
+          </div>
+        </td>
       </tr>`).join('')}
       </tbody></table></div>`;
+
+    document.querySelectorAll('[data-edit-user]').forEach(b => {
+      b.onclick = () => showEditUserForm(JSON.parse(b.dataset.editUser));
+    });
+    document.querySelectorAll('[data-del-user]').forEach(b => {
+      b.onclick = async () => {
+        if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) return;
+        try {
+          await API.adminDeleteUser(b.dataset.delUser);
+          toast('User deleted successfully.');
+          loadAdminUsers();
+        } catch(e) {
+          toast(e.message, 'error');
+        }
+      };
+    });
   } catch(e) { el.innerHTML = emptyState('<i data-lucide="x-circle"></i>','Error',e.message); }
+}
+
+function showEditUserForm(user) {
+  openModal(`
+    <h2 class="modal-title"><i data-lucide="user-cog"></i> Edit User</h2>
+    <p class="text-muted mb-24">Update details for ${user.name}</p>
+    <form id="user-edit-form">
+      <div class="form-group">
+        <label class="form-label">Full Name *</label>
+        <input id="ue-name" class="form-control" value="${user.name}" required/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email Address *</label>
+        <input id="ue-email" type="email" class="form-control" value="${user.email}" required/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Role</label>
+        <select id="ue-role" class="form-control">
+          <option value="user" ${user.role === 'user' ? 'selected' : ''}>User</option>
+          <option value="staff" ${user.role === 'staff' ? 'selected' : ''}>Staff</option>
+          <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Admin</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">New Password (leave blank to keep current)</label>
+        <input id="ue-pass" type="password" class="form-control" placeholder="••••••••"/>
+      </div>
+      <div id="ue-err" class="form-error mb-16"></div>
+      <button class="btn btn-primary btn-block" type="submit" id="ue-btn">Save Changes</button>
+    </form>`);
+
+  document.getElementById('user-edit-form').onsubmit = async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('ue-btn');
+    const name = document.getElementById('ue-name').value;
+    const email = document.getElementById('ue-email').value;
+    const role = document.getElementById('ue-role').value;
+    const password = document.getElementById('ue-pass').value;
+
+    const payload = { name, email, role };
+    if (password) {
+      payload.password = password;
+      payload.password_confirmation = password; // Add if backend requires it
+    }
+
+    btn.disabled = true; btn.textContent = 'Saving…';
+    try {
+      await API.adminUpdateUser(user.id, payload);
+      toast('User updated successfully!');
+      closeModal();
+      loadAdminUsers();
+    } catch(err) {
+      document.getElementById('ue-err').textContent = err.message;
+      btn.disabled = false; btn.textContent = 'Save Changes';
+    }
+  };
 }
 
 function showUserForm(role = 'user') {
